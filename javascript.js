@@ -72,6 +72,14 @@ globalClickEventListner("click", [
       calcObject.clear();
     },
   },
+  {
+    selector: "#ac",
+    handleClick: (e) => {
+      calculatorScreen.textContent = "0";
+      calcObject.clear();
+      console.log("bim bam");
+    },
+  },
 ]);
 
 const operate = (numOne, operator, numTwo) => {
