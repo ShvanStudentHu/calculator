@@ -1,8 +1,9 @@
-console.log("hello world");
 const content = document.querySelector(".content");
 const calculator = document.querySelector("#three");
 const number = document.querySelector(".number-button");
+const special = document.querySelector(".special-button");
 const calculatorScreen = document.querySelector(".calc-screen");
+const calc = document.querySelector("#calculator");
 // set on true when user pressed a button
 
 const calcObject = {
@@ -30,12 +31,6 @@ const globalClickEventListner = (type, cases) => {
     });
   });
 };
-
-// function handleClick(e) {
-//   let num = e.target.textContent;
-//   calcObject.numbers.push(Number(num));
-//   calculatorScreen.textContent = num;
-// }
 
 globalClickEventListner("click", [
   {
@@ -77,7 +72,6 @@ globalClickEventListner("click", [
     handleClick: (e) => {
       calculatorScreen.textContent = "0";
       calcObject.clear();
-      console.log("bim bam");
     },
   },
 ]);
@@ -97,26 +91,37 @@ const operate = (numOne, operator, numTwo) => {
   }
 };
 
-const func = () => {
-  number.addEventListener("click", () => {
-    let a = number.textContent;
-    calculatorScreen.textContent = a;
-    return a;
-  });
-};
-
-const functionone = () =>
-  calculator.addEventListener("click", () => {
-    calculatorScreen.textContent = currentText + "hi";
-    num = calculatorScreen.textContent;
-    console.log("i was clicked");
-    return num;
-  });
-
 const addition = (numOne, numTwo) => numOne + numTwo;
 
 const substraction = (numOne, numTwo) => numOne - numTwo;
 
 const multiplier = (numOne, numTwo) => numOne * numTwo;
 
-const division = (numOne, numTwo) => numOne / numTwo;
+const division = (numOne, numTwo) => {
+  if (numTwo == 0) {
+    return devideByZeroMessage();
+  } else {
+    return numOne / numTwo;
+  }
+};
+
+function devideByZeroMessage() {
+  return (calculatorScreen.textContent = "OOPS you almost broke the universe");
+  // console.log(pl);
+}
+//incomplete future
+// const buttonActiveState = (selector) => {
+//   const fontColor = getComputedStyle(selector).backgroundColor;
+//   calc.addEventListener("mousedown", () => {
+//     let newFont = fontColor
+//       .split("")
+//       .filter((char) => char >= 0 && char <= 255)
+//       .join("");
+//     console.log(newFont);
+//   });
+//   calc.addEventListener("mouseup", () => {
+//     console.log("it goes up");
+//   });
+// };
+
+// buttonActiveState(special);
