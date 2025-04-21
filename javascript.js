@@ -1,12 +1,12 @@
 const content = document.querySelector(".content");
 const calculator = document.querySelector("#three");
-const number = document.querySelector(".number-button");
-const special = document.querySelector(".special-button");
+const numberButton = document.querySelector(".number-button");
+const specialCharButton = document.querySelector(".special-button");
 const calculatorScreen = document.querySelector(".calc-screen");
 const calc = document.querySelector("#calculator");
 // set on true when user pressed a button
 
-const calcObject = {
+const calculatorState = {
   numOne: [],
   numTwo: [],
   operator: [],
@@ -22,7 +22,7 @@ const calcObject = {
   },
 };
 
-const globalClickEventListner = (type, cases) => {
+const globalClickEventListener = (type, cases) => {
   document.addEventListener(type, (e) => {
     cases.forEach(({ selector, handleClick }) => {
       if (e.target.matches(selector)) {
@@ -32,7 +32,7 @@ const globalClickEventListner = (type, cases) => {
   });
 };
 
-globalClickEventListner("click", [
+globalClickEventListener("click", [
   {
     selector: ".number-button",
     handleClick: (e) => {
@@ -42,36 +42,35 @@ globalClickEventListner("click", [
   {
     selector: ".operator-button",
     handleClick: (e) => {
-      calcObject.operator.push(e.target.textContent);
-      if (calcObject.firstNumberPressed == false) {
-        calcObject.numOne.push(Number(calculatorScreen.textContent));
+      calculatorState.operator.push(e.target.textContent);
+      if (calculatorState.firstNumberPressed == false) {
+        calculatorState.numOne.push(Number(calculatorScreen.textContent));
         calculatorScreen.textContent = "";
-        calcObject.firstNumberPressed = true;
-      } else if (calcObject.firstNumberPressed == true) {
+        calculatorState.firstNumberPressed = true;
       }
     },
   },
   {
     selector: "#equal",
     handleClick: (e) => {
-      if (calcObject.firstNumberPressed == false) {
+      if (calculatorState.firstNumberPressed == false) {
         return;
       }
-      calcObject.numTwo.push(Number(calculatorScreen.textContent));
+      calculatorState.numTwo.push(Number(calculatorScreen.textContent));
       let result = operate(
-        calcObject.numOne[0],
-        calcObject.operator[0],
-        calcObject.numTwo[0]
+        calculatorState.numOne[0],
+        calculatorState.operator[0],
+        calculatorState.numTwo[0]
       );
       calculatorScreen.textContent = result;
-      calcObject.clear();
+      calculatorState.clear();
     },
   },
   {
     selector: "#ac",
     handleClick: (e) => {
       calculatorScreen.textContent = "0";
-      calcObject.clear();
+      calculatorState.clear();
     },
   },
 ]);
@@ -109,7 +108,7 @@ function devideByZeroMessage() {
   return (calculatorScreen.textContent = "OOPS you almost broke the universe");
   // console.log(pl);
 }
-//incomplete future
+//incomplete feature
 // const buttonActiveState = (selector) => {
 //   const fontColor = getComputedStyle(selector).backgroundColor;
 //   calc.addEventListener("mousedown", () => {
