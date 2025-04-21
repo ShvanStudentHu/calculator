@@ -9,8 +9,6 @@ const calculatorState = {
   firstNumber: null,
   secondNumber: null,
   operator: null,
-  firstNumberPressed: false,
-  secondNumberPressed: false,
   operatorPressed: false,
   equalPressed: false,
 
@@ -26,9 +24,11 @@ const calculatorState = {
       return false;
     }
   },
-};
 
-calculatorState.checkDeclaration("firstNumber");
+  checkAllDeclared: function (...property) {
+    return property.every((key) => this[key] !== null);
+  },
+};
 
 const globalClickEventListener = (type, cases) => {
   document.addEventListener(type, (e) => {
@@ -45,30 +45,40 @@ globalClickEventListener("click", [
     selector: ".number-button",
     handleClick: (e) => {
       calculatorScreen.textContent += e.target.textContent;
-      if (calculatorState.operatorPressed == false) {
+      if (!calculatorState.checkDeclaration("operator")) {
         calculatorState.firstNumber = Number(calculatorScreen.textContent);
-      } else if (calculatorScreen.operator == true) {
-        calculatorScreen.secondNumber = Number(calculatorScreen.textContent);
+      } else if (calculatorState.checkDeclaration("operator")) {
+        calculatorState.secondNumber = Number(calculatorScreen.textContent);
       }
     },
   },
   {
     selector: ".operator-button",
     handleClick: (e) => {
-      calculatorState.operator = e.target.textContent;
-      if (!calculatorState.firstNumberPressed) {
-        calculatorScreen.textContent = "";
-      } else {
-        calculatorState.secondNumber = calculatorScreen.textContent;
+      if (
+        calculatorState.checkAllDeclared(
+          "firstNumber",
+          "secondNumber",
+          "operator"
+        )
+      ) {
+        let result = operate(
+          calculatorState.firstNumber,
+          calculatorState.operator,
+          calculatorState.secondNumber
+        );
+        calculatorScreen.textContent = result;
+        console.log(result);
+        calculatorState.clear();
       }
+      calculatorState.operator = e.target.textContent;
+      calculatorState.firstNumber = Number(calculatorScreen.textContent);
+      calculatorScreen.textContent = "";
     },
   },
   {
     selector: "#equal",
     handleClick: (e) => {
-      if (!calculatorState.firstNumberPressed) {
-        return;
-      }
       calculatorState.secondNumber = Number(calculatorScreen.textContent);
       let result = operate(
         calculatorState.firstNumber,
@@ -76,7 +86,7 @@ globalClickEventListener("click", [
         calculatorState.secondNumber
       );
       calculatorScreen.textContent = result;
-      calculatorState.clear();
+      // calculatorState.clear();
     },
   },
   {
