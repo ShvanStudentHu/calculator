@@ -10,13 +10,25 @@ const calculatorState = {
   secondNumber: null,
   operator: null,
   firstNumberPressed: false,
+  secondNumberPressed: false,
+  operatorPressed: false,
   equalPressed: false,
 
   clear: function () {
     this.firstNumber = this.secondNumber = this.operator = null;
     this.firstNumberPressed = this.equalPressed = false;
   },
+
+  checkDeclaration: function (property) {
+    if (this[property] !== null) {
+      return true;
+    } else {
+      return false;
+    }
+  },
 };
+
+calculatorState.checkDeclaration("firstNumber");
 
 const globalClickEventListener = (type, cases) => {
   document.addEventListener(type, (e) => {
@@ -33,6 +45,11 @@ globalClickEventListener("click", [
     selector: ".number-button",
     handleClick: (e) => {
       calculatorScreen.textContent += e.target.textContent;
+      if (calculatorState.operatorPressed == false) {
+        calculatorState.firstNumber = Number(calculatorScreen.textContent);
+      } else if (calculatorScreen.operator == true) {
+        calculatorScreen.secondNumber = Number(calculatorScreen.textContent);
+      }
     },
   },
   {
@@ -40,9 +57,7 @@ globalClickEventListener("click", [
     handleClick: (e) => {
       calculatorState.operator = e.target.textContent;
       if (!calculatorState.firstNumberPressed) {
-        calculatorState.firstNumber = Number(calculatorScreen.textContent);
         calculatorScreen.textContent = "";
-        calculatorState.firstNumberPressed = true;
       } else {
         calculatorState.secondNumber = calculatorScreen.textContent;
       }
