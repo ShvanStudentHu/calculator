@@ -4,21 +4,17 @@ const numberButton = document.querySelector(".number-button");
 const specialCharButton = document.querySelector(".special-button");
 const calculatorScreen = document.querySelector(".calc-screen");
 const calc = document.querySelector("#calculator");
-// set on true when user pressed a button
 
 const calculatorState = {
-  numOne: [],
-  numTwo: [],
-  operator: [],
+  firstNumber: null,
+  secondNumber: null,
+  operator: null,
   firstNumberPressed: false,
   equalPressed: false,
 
   clear: function () {
-    [
-      (this.numOne = []),
-      (this.numTwo = []),
-      ((this.operator = []), (this.firstNumberPressed = false)),
-    ];
+    this.firstNumber = this.secondNumber = this.operator = null;
+    this.firstNumberPressed = this.equalPressed = false;
   },
 };
 
@@ -42,25 +38,27 @@ globalClickEventListener("click", [
   {
     selector: ".operator-button",
     handleClick: (e) => {
-      calculatorState.operator.push(e.target.textContent);
-      if (calculatorState.firstNumberPressed == false) {
-        calculatorState.numOne.push(Number(calculatorScreen.textContent));
+      calculatorState.operator = e.target.textContent;
+      if (!calculatorState.firstNumberPressed) {
+        calculatorState.firstNumber = Number(calculatorScreen.textContent);
         calculatorScreen.textContent = "";
         calculatorState.firstNumberPressed = true;
+      } else {
+        calculatorState.secondNumber = calculatorScreen.textContent;
       }
     },
   },
   {
     selector: "#equal",
     handleClick: (e) => {
-      if (calculatorState.firstNumberPressed == false) {
+      if (!calculatorState.firstNumberPressed) {
         return;
       }
-      calculatorState.numTwo.push(Number(calculatorScreen.textContent));
+      calculatorState.secondNumber = Number(calculatorScreen.textContent);
       let result = operate(
-        calculatorState.numOne[0],
-        calculatorState.operator[0],
-        calculatorState.numTwo[0]
+        calculatorState.firstNumber,
+        calculatorState.operator,
+        calculatorState.secondNumber
       );
       calculatorScreen.textContent = result;
       calculatorState.clear();
@@ -75,38 +73,42 @@ globalClickEventListener("click", [
   },
 ]);
 
-const operate = (numOne, operator, numTwo) => {
+const operate = (firstNumber, operator, secondNumber) => {
+  if (firstNumber == null || secondNumber == null || !operator) {
+    calculatorScreen.textContent = "invalid input";
+    return;
+  }
   switch (operator) {
     case "+":
-      return addition(numOne, numTwo);
+      return addition(firstNumber, secondNumber);
     case "-":
-      return substraction(numOne, numTwo);
+      return subtraction(firstNumber, secondNumber);
     case "*":
-      return multiplier(numOne, numTwo);
+      return multiplier(firstNumber, secondNumber);
     case "/":
-      return division(numOne, numTwo);
+      return division(firstNumber, secondNumber);
     default:
-      console.log("oops something went wrong");
+      calculatorScreen.textContent = "Unknown operator";
+      return;
   }
 };
 
-const addition = (numOne, numTwo) => numOne + numTwo;
+const addition = (firstNumber, secondNumber) => firstNumber + secondNumber;
 
-const substraction = (numOne, numTwo) => numOne - numTwo;
+const subtraction = (firstNumber, secondNumber) => firstNumber - secondNumber;
 
-const multiplier = (numOne, numTwo) => numOne * numTwo;
+const multiplier = (firstNumber, secondNumber) => firstNumber * secondNumber;
 
-const division = (numOne, numTwo) => {
-  if (numTwo == 0) {
-    return devideByZeroMessage();
+const division = (firstNumber, secondNumber) => {
+  if (secondNumber == 0) {
+    divideByZeroMessage();
   } else {
-    return numOne / numTwo;
+    return firstNumber / secondNumber;
   }
 };
 
-function devideByZeroMessage() {
-  return (calculatorScreen.textContent = "OOPS you almost broke the universe");
-  // console.log(pl);
+function divideByZeroMessage() {
+  calculatorScreen.textContent = "OOPS you almost broke the universe";
 }
 //incomplete feature
 // const buttonActiveState = (selector) => {
