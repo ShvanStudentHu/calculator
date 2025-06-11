@@ -31,3 +31,5 @@ This project is a simple, interactive calculator built using HTML, CSS, and Java
 ---
 
 📌 *Feel free to share any suggestions or feedback—collaboration is always welcome!*
+"The Git commit messages were written following the Conventional Commits specification
+https://www.conventionalcommits.org/en/v1.0.0/
